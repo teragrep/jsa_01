@@ -1,0 +1,71 @@
+# javascript appender
+
+Create appender for log4js-node to enable RELP usage from node.js applications.
+
+
+User Story: 
+
+== Specs
+
+^^^^^^
+Requirements Backlog
+[options="header,footer"]
+|=======================
+|#"|Title      |User Story |Importance |Status
+|1    |Rebind    |Rebind of the rlp_02 connection must be done after configureable amount of messages | OPTIONAL |Open
+|2    |Syslog     |Wrap messages in syslog envelope |Must Have |Open
+|3    |RELP    |Use rlp_02 library  |Must Have |Open
+|4    |Lossless|Retry indefinitely and do not lose messages |Must Have |Open
+|5    |Robust|Processing must not hang indefinitely due to techinical issues but rather retry new connection |Must Have |Open
+|6    |Source Data    |Must include origin data in syslog structure-data within source-metadata | Must Have |Open
+|7    |Originator     |Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it |Must Have |Open
+|8    |app-namme    |syslog app-name must be configureable  |Must Have |Open
+|9    |hostname|syslog hostname must be configureable |Must Have |Open
+|10   |server port|Server ports need to be configureable |Must Have |Open
+|11   |Server address    |server address needs to be configureable | Must Have |Open
+|12   |Expose error SyslogMessage     |Erros(expecptions) must not be hidden |Must Have |Open
+|13   |Extra libraries    |Do not use extra libraries  |Must Have |Open
+|14   |Variable checking|Check variables provided via configuration to be valid and raise errors if not in initilization |Must Have |Open
+|15   |Debug flags|Allow passing debulg falgs via configuration |OPTIONAL |Open
+
+|=======================
+
+
+
+== High-level Architecture
+
+TBA
+
+== Implementation
+
+TBA
+
+* `installation of *rlp_02 and rlo_08*`
++
+[source,node]
+-----------------
+npm install 
+-----------------
+
+* Module usage:
++
+[source,javascript]
+-----------------
+const { SyslogMessage, Facility, SDElement, SDParam, Severity } = require('@teragrep/rlo_08')
+const { RelpConnection, RelpBatch } = require('@teragrep/rlp_02')
+-----------------
+
+* RelpConnection usage:
++
+
+
+** Build
++
+[source,java]
+-----------------
+mvn clean package
+-----------------
+
+* OPTIONAL *TIPS*
+
+

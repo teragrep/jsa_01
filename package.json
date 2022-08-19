@@ -1,0 +1,45 @@
+{
+  "name": "@teragrep/jsa_01",
+  "version": "v1.0.0",
+  "description": "Javascript appender library",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teragrep/jsa_01.git"
+  },
+  "bugs": {
+    "url": "https://github.com/teragrep/jsa_01/issues"
+  },
+  "scripts": {
+    "test": "karma start --single-run  ./src/test/js/karma.conf.js",
+    "karma-test": "jasmine",
+    "postpublish": "npm run publish-npm",
+    "publish-npm": "npm publish --access public --ignore-scripts --@teragrep:registry='https://registry.npmjs.org'"
+  },
+  "engines": {
+    "node": ">=12.5.0"
+  },
+  "files": [
+    "src/**/*.js"
+  ],
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "author": "Teragrep",
+  "license": "Apache-2.0",
+  "main": "./src/index.js",
+  "devDependencies": {
+    "@teragrep/rlp_02": "^1.0.19-rc12",
+    "async": "^3.2.4",
+    "async-mutex": "^0.3.2",
+    "dotenv": "^10.0.0",
+    "dsa.js": "^2.7.6",
+    "jasmine": "^3.99.0",
+    "jasmine-core": "^3.99.1",
+    "karma": "^6.4.0",
+    "karma-jasmine": "^4.0.2",
+    "karma-requirejs": "^1.1.0",
+    "node": "^16.17.0",
+    "requirejs": "^2.3.6"
+  }
+}
