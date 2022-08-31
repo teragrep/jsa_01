@@ -4,6 +4,7 @@ Create appender for log4js-node to enable RELP usage from node.js applications.
 
 
 User Story: 
+As a developer I would like to use jsa_01 to push log messages over relp to a compatible relp-server with syslog envelope
 
 == Specs
 
@@ -68,7 +69,7 @@ mvn clean package
 
 * OPTIONAL *TIPS*
 
-== configuration
+== Configuration
 
 TBA
 
