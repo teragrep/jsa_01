@@ -14,16 +14,16 @@ Requirements Backlog
 |=======================
 |#  |Title      |User Story |Importance |Status
 |1    |Rebind    |Rebind of the rlp_02 connection must be done after configureable amount of messages | OPTIONAL |Open
-|2    |Syslog     |Wrap messages in syslog envelope |Must Have |Open
-|3    |RELP    |Use rlp_02 library  |Must Have |Open
+|2    |Syslog     |Wrap messages in syslog envelope |Must Have |WIP
+|3    |RELP    |Use rlp_02 library  |Must Have |Done
 |4    |Lossless|Retry indefinitely and do not lose messages |Must Have |Open
 |5    |Robust|Processing must not hang indefinitely due to techinical issues but rather retry new connection |Must Have |Open
-|6    |Source Data    |Must include origin data in syslog structure-data within source-metadata | Must Have |Open
-|7    |Originator     |Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it |Must Have |Open
-|8    |app-name    |Syslog app-name must be configureable  |Must Have |Open
-|9    |hostname|syslog hostname must be configureable |Must Have |Open
-|10   |server port|Server ports need to be configureable |Must Have |Open
-|11   |Server address    |server address needs to be configureable | Must Have |Open
+|6    |Source Data    |Must include origin data in syslog structure-data within source-metadata | Must Have |WIP
+|7    |Originator     |Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it |Must Have |WIP
+|8    |app-name    |Syslog app-name must be configureable  |Must Have |Done
+|9    |hostname|syslog hostname must be configureable |Must Have |Done
+|10   |server port|Server ports need to be configureable |Must Have |Done
+|11   |Server address    |server address needs to be configureable | Must Have |Done
 |12   |Expose error SyslogMessage     |Erros(expecptions) must not be hidden |Must Have |Open
 |13   |Extra libraries    |Do not use extra libraries  |Must Have |Open
 |14   |Variable checking|Check variables provided via configuration to be valid and raise errors if not in initilization |Must Have |Open

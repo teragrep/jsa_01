@@ -1,5 +1,8 @@
 /**
- * 
+ * @todo
+ * - Must include origin data in syslog structure-data within source-metadata
+ * - Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it
+ * Appender jsa_01 to push log messages over relp to a compatible relp-server with syslog envelope
  * 
  */
 
@@ -10,13 +13,7 @@
  const os = require('os')
  const debug = require('debug')//('log4js:jsa_01');
  
- 
  let relpConnection;
- //let serverAddress;
- //let serverPort;
- 
-
-
 
  /**
   * 
@@ -27,9 +24,6 @@
   * @param {} layout 
   * @param {} levels 
   * 
-  * @todo
-  *  - Must include origin data in syslog structure-data within source-metadata
-  *  - Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it
   */
 
  function jsAppender(config, layout, levels) {
@@ -43,7 +37,7 @@
   levelMapping[levels.FATAL] = Severity.CRITICAL
 
   const appName = config.appName || 'teragrep-blacksquad'
-  const hostname = config.hostname || os.hostname
+  const hostname = config.hostname || os.hostname()
   const serverPort = config.serverPort || 1601
   const serverAddress = config.serverAddress || '127.0.0.1'
   debug('Appender create with config ', config);
@@ -67,42 +61,83 @@ function setupConnection(serverPort, serverAddress){
   })
 }
 
+async function init(){
+    let host = serverAddress //'localhost';
+    let port = serverPort//1601;
+     return await setupConnection(port, host);
+  }
+  //init()
 
+  // Generate & wrap the messages in the syslog envelop 
 async function generateSyslogMessage(loggingEvent){
- // console.log('DATA', loggingEvent.data, loggingEvent.level)
-  let originSDElement = new SDElement('origin', hostname)
+ console.log('DATA',loggingEvent.startTime, loggingEvent.categoryName, loggingEvent.data, loggingEvent.level, loggingEvent.context, loggingEvent.pid)
+  //let originSDElement = new SDElement('origin', hostname)
+
+  let startTime = loggingEvent.startTime
+  let categoryName = loggingEvent.categoryName
+  let context = loggingEvent.context
+  let pid = loggingEvent.pid.toString() // Converting to string for adjusting to syslog
+  let level = loggingEvent.level.levelStr
+
+  console.log(loggingEvent.level.levelStr, loggingEvent.data)
+
 
   let message = new SyslogMessage.Builder()
-       .withAppName('bulk-data-sorted') //valid
-    // .withTimestamp(timestamp) // In case if the timestamp disabled, it will go with system timestamp.
-       .withHostname(hostname) //valid  
+       .withAppName(appName) //validation
+       .withTimestamp(startTime) // 
+       .withHostname(hostname)   
        .withFacility(Facility.LOCAL0)
        .withSeverity(Severity.CRITICAL) // 
-       .withProcId('8740') 
+       .withProcId(pid) 
        .withMsgId('ID47')
-       .withMsg('solve the problem. Then, write the code') // @todo: extract the message from the log
+       .withMsg('Solve the problem. Then, write the code') // @todo: extract the message from the log
        .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "Application")))  
-       .withDebug(false)
+       .withDebug(true) // Note this line set enable all the console log messages🤓
        .build()
 
       return await message.toRfc5424SyslogMessage();
        //return rfc5424message;
 }
 
-const app = (loggingEvent) => {
 
+
+const app = async (loggingEvent) => {
+    
+   
     // Generate the syslog message
-   let rfc5424log =  generateSyslogMessage(loggingEvent)
-   console.log('RFC IS MISSING::::',rfc5424log)
+   let rfc5424log = await generateSyslogMessage(loggingEvent)
 
     // Lets create the RELP connection
-    setupConnection(serverPort, serverAddress)
-    process.stdout.write(`${rfc5424log}\n`);
-    process.stdout.write(`${layout(loggingEvent)}\n`);
+    await init()
+    await commit(rfc5424log)
+    process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
+
   };
 
   return app
 }
+
+async function commit(msg){
+    return new Promise(async(resolve, reject) => {
+      let relpBatch = new RelpBatch();
+      relpBatch.insert(msg);
+      
+      let resWindow = await relpConnection.commit(relpBatch);
+      
+      let notSent = (resWindow === true) ? true : false; //Test purpose 
+      while(notSent){                          
+        let res = await relpBatch.verifyTransactionAllPromise();                              
+        if(res){
+            notSent = false;
+            resolve(true);
+            }
+        else{
+          reject(false);
+            }                            
+      }    
+     return resolve(true);
+    }) 
+  }
 
 function configure(config, layouts, levels) {
   let layout = layouts.colouredLayout;
