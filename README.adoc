@@ -8,7 +8,7 @@ As a developer I would like to use jsa_01 to push log messages over relp to a co
 
 == Specs
 
-^^^^^^
+^^^^^
 Requirements Backlog
 [options="header,footer"]
 |=======================

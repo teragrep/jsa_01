@@ -9,7 +9,7 @@ const appenderJSModule = {
 
 
 log4js.configure( {
-    appenders: {jsa: { type: jsAppender, },
+    appenders: {jsa: { type: jsAppender, appName: 'teragrep' },
     console: { type: 'console' },
   },
   categories: {
@@ -35,16 +35,19 @@ const logger = log4js.getLogger('jsa');
   // these will not appear (logging level beneath error)
   logger.trace('Entering trace: First, solve the problem. Then, write the code');
   logger.debug('Got TG.');
+  logger.trace('Entering trace: First, solve the problem. Then, write the code');
   
   logger.log('Something funny about DEBUG.');
   logger.warn('BUG is quite smelly.');
   // these end up 
-  logger.error('FIX %s is over enginnered 😎!', 'Cheera!');
-  //logger.fatal('Cheese was breeding ground for listeria.');
- // logger.fatal('Don’t test it as a NASA application');
+  //logger.error('FIX %s is over enginnered 😎!', 'Cheers!');
+  //logger.error('Entering trace: First, solve the problem. Then, write the code');
+  //logger.fatal('Don’t test it as a NASA application');
+  logger.fatal('Do not test it as a NASA application');
+ 
  
   /*
-  // these don't end up in cheese.log, but will appear on the console
+  // these don't end up in, but will appear on the console
   const anotherLogger = log4js.getLogger('another');
   anotherLogger.debug('Just checking');
   
