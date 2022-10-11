@@ -1,11 +1,6 @@
+
 const log4js = require('log4js')
 var jsAppender = require('../../main/js/lib/index.js')
-
-const appenderJSModule = {
-    configure: (config, layouts, findAppender, level) => {
-
-    }
-}
 
 
 log4js.configure( {
@@ -20,17 +15,6 @@ log4js.configure( {
 })
 
 const logger = log4js.getLogger('jsa');
-/*  
-// only errors and above get logged.
-  const otherLogger = log4js.getLogger();
-  
-  // this will get coloured output on console, and appear in log
-  otherLogger.error('AAArgh No Worries! Something went wrong 😎', {
-    some: 'otherObject',
-    useful_for: 'debug purposes',
-  });
-  otherLogger.log('This should appear as info output');
-  */
 
   // these will not appear (logging level beneath error)
   logger.trace('Entering trace: First, solve the problem. Then, write the code');
@@ -42,16 +26,6 @@ const logger = log4js.getLogger('jsa');
   // these end up 
   //logger.error('FIX %s is over enginnered 😎!', 'Cheers!');
   //logger.error('Entering trace: First, solve the problem. Then, write the code');
-  //logger.fatal('Don’t test it as a NASA application');
-  logger.fatal('Do not test it as a NASA application');
+  //logger.fatal('Don’t test it as a NASA application');  // ⛔ The Unicode character ' (U+2019 RIGHT SINGLE QUOTATION MARK) . So when pushing the log message with U+2019 fails but WHY???
+  logger.fatal("Don't  test it as a NASA Äpplication"); 
  
- 
-  /*
-  // these don't end up in, but will appear on the console
-  const anotherLogger = log4js.getLogger('another');
-  anotherLogger.debug('Just checking');
-  
-  // will also go to console and cheese.log, since that's configured for all categories
-  const bulkLog = log4js.getLogger('bulk-tg');
-  bulkLog.debug('Something for bigdata ');
-  */

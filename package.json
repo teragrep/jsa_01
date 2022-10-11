@@ -29,8 +29,8 @@
   "license": "Apache-2.0",
   "main": "./src/index.js",
   "devDependencies": {
-    "@teragrep/rlo_08": "^1.0.1-rc1",
-    "@teragrep/rlp_02": "^1.0.19-rc12",
+    "@teragrep/rlo_08": "^1.0.2-rc1",
+    "@teragrep/rlp_02": "^1.1.0",
     "async": "^3.2.4",
     "dotenv": "^10.0.0",
     "dsa.js": "^2.7.6",
@@ -40,7 +40,7 @@
     "karma-jasmine": "^4.0.2",
     "karma-requirejs": "^1.1.0",
     "log4js": "^6.6.1",
-    "node": "^16.17.0",
+    "node": "^16.17.1",
     "requirejs": "^2.3.6"
   }
 }

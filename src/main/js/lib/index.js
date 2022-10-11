@@ -27,7 +27,19 @@
   */
 
  function jsAppender(config, layout, levels) {
-
+   /**
+    * this is for upcoming setting  
+    */
+   /*
+  const levelMapping = {};
+  levelMapping[levels.ALL] = Severity.DEBUG
+  levelMapping[levels.TRACE] = Severity.DEBUG
+  levelMapping[levels.DEBUG] = Severity.DEBUG
+  levelMapping[levels.INFO] = Severity.INFORMATIONAL
+  levelMapping[levels.WARN] = Severity.WARNING
+  levelMapping[levels.ERROR] = Severity.ERROR
+  levelMapping[levels.FATAL] = Severity.CRITICAL 
+*/
   const appName = config.appName || '-' // leave it empty
   const hostname = config.hostname || os.hostname()
   const serverPort = config.serverPort || 1601
@@ -63,8 +75,11 @@ async function init(){
   // Generate & wrap the messages in the syslog envelop 
 async function generateSyslogMessage(loggingEvent){
 
- //let originSDElement = new SDElement('origin', hostname) // JLA_01
+  
 
+  let originSDElement = new SDElement('origin', hostname) // JLA_01
+  let needToFix = 'Don’t test it as a NASA application'
+  
   let startTime = loggingEvent.startTime
   let pid = loggingEvent.pid.toString() // Converting to string for adjusting to syslog
  // let level = loggingEvent.level.levelStr // Current implememation uses the hardcoded level
@@ -78,7 +93,7 @@ async function generateSyslogMessage(loggingEvent){
        .withSeverity(Severity.WARNING) // Warining 
        .withProcId(pid) 
        .withMsg(logData) // @todo: Check the test case line 45 🤔
-       .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "Application")))  
+       .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
        .withDebug(false) // Note this line set enable all the console log messages🤓
        .build()
 
@@ -90,17 +105,25 @@ async function generateSyslogMessage(loggingEvent){
 
 const app = async (loggingEvent) => {
     
-    // Generate the syslog message
-   let rfc5424log = await generateSyslogMessage(loggingEvent)
+   
 
-    // Lets create the RELP connection
-    await init()
+    
+   
+  // Generate the syslog message
+   let rfc5424log = await generateSyslogMessage(loggingEvent)
+    
+   // Lets create the RELP connection
+    await init()  
     await commit(rfc5424log)
     process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
     //await disconnect()
 
   };
 
+  app.shutdown = async (cb) => {
+    await relpConnection.disconnect()
+    cb()
+  }
   return app
 }
 
@@ -124,6 +147,16 @@ async function commit(msg){
       }    
      return resolve(true);
     }) 
+  }
+
+  async function disconnect(state) {
+    if(state){
+       await relpConnection.disconnect();
+    }
+    else {
+      console.log('Check the connection...')
+    }
+    
   }
 
 function configure(config, layouts, levels) {
