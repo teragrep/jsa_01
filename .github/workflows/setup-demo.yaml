@@ -30,5 +30,8 @@ jobs:
          java -jar java-relp-server-demo-jar-with-dependencies.jar & 
 
       - name: Compile Test
-        run: mvn clean package
+        run: |
+         mvn clean package
+         cd src/test/js
+         node test-index.js
 

@@ -43,7 +43,7 @@
   const appName = config.appName || '-' // leave it empty
   const hostname = config.hostname || os.hostname()
   const serverPort = config.serverPort || 1601
-  const serverAddress = config.serverAddress || '127.0.0.1'
+  const serverAddress = config.serverAddress || 'localhost'
   debug('Appender create with config ', config);
 
   const con = {
@@ -70,12 +70,14 @@ async function init(){
     let port = serverPort//1601;
      return await setupConnection(port, host);
   }
-  //init()
+ // init()
 
   // Generate & wrap the messages in the syslog envelop 
 async function generateSyslogMessage(loggingEvent){
 
   
+  
+
 
   let originSDElement = new SDElement('origin', hostname) // JLA_01
   let needToFix = 'Don’t test it as a NASA application'
@@ -102,26 +104,23 @@ async function generateSyslogMessage(loggingEvent){
 }
 
 
-
+let mode = true;
 const app = async (loggingEvent) => {
-    
-   
-
     
    
   // Generate the syslog message
    let rfc5424log = await generateSyslogMessage(loggingEvent)
-    
+
    // Lets create the RELP connection
-    await init()  
+    await init();
     await commit(rfc5424log)
     process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
-    //await disconnect()
+    await disconnect()
 
   };
 
-  app.shutdown = async (cb) => {
-    await relpConnection.disconnect()
+  app.shutdown =  (cb) => {
+   // disconnect()
     cb()
   }
   return app
