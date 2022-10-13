@@ -115,12 +115,12 @@ const app = async (loggingEvent) => {
     await init();
     await commit(rfc5424log)
     process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
-    await disconnect()
+   // await disconnect()
 
   };
 
   app.shutdown =  (cb) => {
-   // disconnect()
+    disconnect()
     cb()
   }
   return app

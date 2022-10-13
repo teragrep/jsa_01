@@ -32,6 +32,4 @@ jobs:
       - name: Compile Test
         run: |
          mvn clean package
-         cd src/test/js
-         node test-index.js
 
