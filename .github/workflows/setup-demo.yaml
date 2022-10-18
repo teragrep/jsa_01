@@ -31,8 +31,7 @@ jobs:
 
       - name: Compile Test
         run: |
-         pwd
-         cd src/test/js
          node test-index.js
          process.exit()
+
 
