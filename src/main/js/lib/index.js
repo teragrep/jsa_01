@@ -12,6 +12,7 @@
  const { RelpConnection, RelpBatch } = require('@teragrep/rlp_02')
  const os = require('os')
  const debug = require('debug')//('log4js:jsa_01');
+ const async = require('async')
  
  let relpConnection;
 
@@ -68,16 +69,12 @@ function setupConnection(serverPort, serverAddress){
 async function init(){
     let host = serverAddress //'localhost';
     let port = serverPort//1601;
-     return await setupConnection(port, host);
+    return await setupConnection(port, host);
   }
  // init()
 
   // Generate & wrap the messages in the syslog envelop 
 async function generateSyslogMessage(loggingEvent){
-
-  
-  
-
 
   let originSDElement = new SDElement('origin', hostname) // JLA_01
   let needToFix = 'Don’t test it as a NASA application'
@@ -94,7 +91,7 @@ async function generateSyslogMessage(loggingEvent){
        .withFacility(Facility.USER) // user-defined 
        .withSeverity(Severity.WARNING) // Warining 
        .withProcId(pid) 
-       .withMsg(logData) // @todo: Check the test case line 45 🤔
+       .withMsg(logData) // 
        .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
        .withDebug(false) // Note this line set enable all the console log messages🤓
        .build()
@@ -103,25 +100,48 @@ async function generateSyslogMessage(loggingEvent){
        //return rfc5424message;
 }
 
+/*
+async.waterfall(
+  [
+  function init(setConnect) {
+          setConnect(null, cfePort, host)
+      },
+  connect,
+  //disconnect
+  ],
+  function (err) {
+      if(err) {
+          console.log(err);
+      }
+      else {
+          console.log('No Error')
+      }
+  }
+);
+*/
 
-let mode = true;
+let mode = false;
 const app = async (loggingEvent) => {
     
-   
   // Generate the syslog message
    let rfc5424log = await generateSyslogMessage(loggingEvent)
 
    // Lets create the RELP connection
-    await init();
-    await commit(rfc5424log)
-    process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
-   // await disconnect()
-
+  
+    let conn = await init();
+    if(conn){
+      await commit(rfc5424log)
+      process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
+      //await disconnect()
+    }
+    
+    //
+    mode = true
   };
 
-  app.shutdown =  (cb) => {
-    disconnect()
-    cb()
+    app.shutdown =  async(cb) => { 
+        await disconnect()
+        await cb()
   }
   return app
 }

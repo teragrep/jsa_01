@@ -1,3 +1,4 @@
+
 // Simple test
 describe('Array', () => {
     describe('#indexOf()', () => {
