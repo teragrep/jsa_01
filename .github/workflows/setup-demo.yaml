@@ -31,7 +31,6 @@ jobs:
 
       - name: Compile Test
         run: |
-         node test-index.js
-         process.exit()
+         mvn clean package
 
 
