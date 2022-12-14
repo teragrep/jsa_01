@@ -66,7 +66,7 @@ function setupConnection(serverPort, serverAddress){
   })
 }
 
-async function init(){
+async function start(){
     let host = serverAddress //'localhost';
     let port = serverPort//1601;
     return await setupConnection(port, host);
@@ -76,15 +76,13 @@ async function init(){
   // Generate & wrap the messages in the syslog envelop 
 async function generateSyslogMessage(loggingEvent){
 
-  let originSDElement = new SDElement('origin', hostname) // JLA_01
-  let needToFix = 'Don’t test it as a NASA application'
-  
-  let startTime = loggingEvent.startTime
-  let pid = loggingEvent.pid.toString() // Converting to string for adjusting to syslog
+  return await new Promise(async(resolve, reject) => {
+    let startTime = loggingEvent.startTime
+    let pid = loggingEvent.pid.toString() // Converting to string for adjusting to syslog
  // let level = loggingEvent.level.levelStr // Current implememation uses the hardcoded level
-  let logData = (loggingEvent.data[0] != '' ? loggingEvent.data[0] : '-')
+    let logData = (loggingEvent.data[0] != '' ? loggingEvent.data[0] : '-')
 
-  let message = new SyslogMessage.Builder()
+    let message = new SyslogMessage.Builder()
        .withAppName(appName) //validation
        .withTimestamp(startTime) // 
        .withHostname(hostname)   
@@ -95,32 +93,11 @@ async function generateSyslogMessage(loggingEvent){
        .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
        .withDebug(false) // Note this line set enable all the console log messages🤓
        .build()
-
-      return await message.toRfc5424SyslogMessage();
+       return resolve (await message.toRfc5424SyslogMessage());
        //return rfc5424message;
-}
-
-/*
-async.waterfall(
-  [
-  function init(setConnect) {
-          setConnect(null, cfePort, host)
-      },
-  connect,
-  //disconnect
-  ],
-  function (err) {
-      if(err) {
-          console.log(err);
-      }
-      else {
-          console.log('No Error')
-      }
+    })
   }
-);
-*/
-
-let mode = false;
+// Maven setup + node // NPM update ** 
 const app = async (loggingEvent) => {
     
   // Generate the syslog message
@@ -128,22 +105,30 @@ const app = async (loggingEvent) => {
 
    // Lets create the RELP connection
   
-    let conn = await init();
+    let conn = await start();
+    
     if(conn){
       await commit(rfc5424log)
       process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
       //await disconnect()
     }
-    
-    //
-    mode = true
   };
 
     app.shutdown =  async(cb) => { 
-        await disconnect()
-        await cb()
+      await disconnect()
+      await cb()
   }
   return app
+}
+/**
+ * This method for testing purpose***
+ * @param {*} ms 
+ * @returns 
+ */
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
 }
 
 async function commit(msg){
@@ -152,6 +137,7 @@ async function commit(msg){
       relpBatch.insert(msg);
       
       let resWindow = await relpConnection.commit(relpBatch);
+      await disconnect(resWindow)
       
       let notSent = (resWindow === true) ? true : false; 
       while(notSent){                          

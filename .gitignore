@@ -3,3 +3,5 @@ node
 package-lock.json
 .vscode
 .clinic
+.settings
+.project
