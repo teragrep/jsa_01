@@ -110,6 +110,7 @@ const app = async (loggingEvent) => {
     if(conn){
       await commit(rfc5424log)
       await process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
+      process.stdout.write(`Testing the console...`)
       //await disconnect()
     }
   };
