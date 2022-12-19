@@ -108,10 +108,12 @@ const app = async (loggingEvent) => {
     let conn = await start();
     
     if(conn){
-
-      process.stdout.write(`Commiting... ${rfc5424log}\n`)
-      await commit(rfc5424log)
-      await process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
+      process.stdout.write(`${rfc5424log}\n`)
+      let result= await commit(rfc5424log)
+      if(result){
+        process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
+        process.stdout.write('Success')
+      }
       //await disconnect()
     }
   };
