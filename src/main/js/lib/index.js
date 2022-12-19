@@ -91,7 +91,7 @@ async function generateSyslogMessage(loggingEvent){
        .withProcId(pid) 
        .withMsg(logData) // 
        .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
-       .withDebug(false) // Note this line set enable all the console log messages🤓
+       .withDebug(true) // Note this line set enable all the console log messages🤓
        .build()
        return resolve (await message.toRfc5424SyslogMessage());
        //return rfc5424message;
@@ -109,8 +109,8 @@ const app = async (loggingEvent) => {
     
     if(conn){
       await commit(rfc5424log)
+      
       await process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
-      process.stdout.write(`Testing the console...`)
       //await disconnect()
     }
   };
