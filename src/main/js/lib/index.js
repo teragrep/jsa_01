@@ -13,6 +13,7 @@
  const os = require('os')
  const debug = require('debug')//('log4js:jsa_01');
  const async = require('async')
+const { Console } = require('console')
  
  let relpConnection;
 
@@ -108,7 +109,8 @@ const app = async (loggingEvent) => {
     let conn = await start();
     
     function print(arg){
-      console.debug(arg)
+      let localConsole = new Console({stdout: process.stdout, stderr: process.stderr});
+      localConsole.log(arg)
     }
 
     if(conn){
