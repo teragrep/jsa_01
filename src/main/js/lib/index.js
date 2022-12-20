@@ -97,7 +97,7 @@ async function generateSyslogMessage(loggingEvent){
        //return rfc5424message;
     })
   }
-// Maven setup + node // NPM update ** 
+// Current automation print the syslog message before relp commit method.
 const app = async (loggingEvent) => {
     
   // Generate the syslog message
@@ -108,12 +108,16 @@ const app = async (loggingEvent) => {
     let conn = await start();
     
     if(conn){
-      process.stdout.write(`${rfc5424log}\n`)
-      let result= await commit(rfc5424log)
-      if(result){
-        process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
+
+     process.platform === 'linux' ? console.info(`${rfc5424log}\n`) : '' // Testing for the workflow
+     
+     let result= await commit(rfc5424log)
+      if(result){  
+        console.info(`${rfc5424log}`)      
+        //process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
         process.stdout.write('Success')
       }
+      
       //await disconnect()
     }
   };
