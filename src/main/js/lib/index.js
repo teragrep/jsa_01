@@ -107,15 +107,19 @@ const app = async (loggingEvent) => {
   
     let conn = await start();
     
+    function print(arg){
+      console.debug(arg)
+    }
+
     if(conn){
 
-     process.platform === 'linux' ? console.info(`${rfc5424log}\n`) : '' // Testing for the workflow
+     //process.platform === 'linux' ? console.info(`${rfc5424log}\n`) : '' // Testing for the workflow
      
      let result= await commit(rfc5424log)
       if(result){  
-        console.info(`${rfc5424log}`)      
+        print(`${rfc5424log}`)      
         //process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
-        process.stdout.write('Success')
+        //process.stdout.write('Success')
       }
       
       //await disconnect()
