@@ -82,7 +82,6 @@ async function generateSyslogMessage(loggingEvent){
     let pid = loggingEvent.pid.toString() // Converting to string for adjusting to syslog
  // let level = loggingEvent.level.levelStr // Current implememation uses the hardcoded level
     let logData = (loggingEvent.data[0] != '' ? loggingEvent.data[0] : '-')
-
     let message = new SyslogMessage.Builder()
        .withAppName(appName) //validation
        .withTimestamp(startTime) // 
@@ -109,7 +108,7 @@ const app = async (loggingEvent) => {
     let conn = await start();
     
     function print(arg){
-      let console = new Console({stdout: process.stdout, stderr: process.stderr});
+      console = new Console({stdout: process.stdout, stderr: process.stderr});
       console.log(arg)
     }
 
