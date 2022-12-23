@@ -109,19 +109,20 @@ const app = async (loggingEvent) => {
     let conn = await start();
     
     function print(arg){
-      let localConsole = new Console({stdout: process.stdout, stderr: process.stderr});
-      localConsole.log(arg)
+      let console = new Console({stdout: process.stdout, stderr: process.stderr});
+      console.log(arg)
     }
 
     if(conn){
 
      //process.platform === 'linux' ? console.info(`${rfc5424log}\n`) : '' // Testing for the workflow
-     
+    let x = console.count()
+   //  process.stdout.write(x)
      let result= await commit(rfc5424log)
       if(result){  
-        print(`${rfc5424log}`)      
-        //process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
-        //process.stdout.write('Success')
+        print(`${rfc5424log}`) // Workflow OS ubuntu does not print the console message, so try to solve it using to create new Console obj🤠 
+       // process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
+     //   process.stdout.write(`console.log(result)`)
       }
       
       //await disconnect()
