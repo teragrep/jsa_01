@@ -120,6 +120,8 @@ const app = async (loggingEvent) => {
      let result= await commit(rfc5424log)
       if(result){  
         print(`${rfc5424log}`) // Workflow OS ubuntu does not print the console message, so try to solve it using to create new Console obj🤠 
+        console.log = () => { }; // Again disable the console
+      
        // process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
      //   process.stdout.write(`console.log(result)`)
       }
