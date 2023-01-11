@@ -30,6 +30,10 @@ jobs:
          java -jar java-relp-server-demo-jar-with-dependencies.jar & 
 
       - name: Compile Test
-        run: mvn clean package
+        run: |
+         echo "$GITHUB_CONTEXT"
+         cd src/test/js
+         node test-index.js
+         mvn clean package
 
 

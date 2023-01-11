@@ -98,15 +98,17 @@ async function generateSyslogMessage(loggingEvent){
     })
   }
 // Current automation print the syslog message before relp commit method.
+
 const app = async (loggingEvent) => {
     
   // Generate the syslog message
    let rfc5424log = await generateSyslogMessage(loggingEvent)
 
+
    // Lets create the RELP connection
+     let conn = await start();
+   
   
-    let conn = await start();
-    
     function print(arg){
       console = new Console({stdout: process.stdout, stderr: process.stderr});
       console.log(arg)
@@ -115,8 +117,8 @@ const app = async (loggingEvent) => {
     if(conn){
 
      //process.platform === 'linux' ? console.info(`${rfc5424log}\n`) : '' // Testing for the workflow
-    let x = console.count()
-   //  process.stdout.write(x)
+    //let x = console.count()
+    // process.stdout.write('Console...')
      let result= await commit(rfc5424log)
       if(result){  
         await print(`${rfc5424log}`) // Workflow OS ubuntu does not print the console message, so try to solve it adjusting the Console obj🤠 
@@ -124,8 +126,7 @@ const app = async (loggingEvent) => {
       
        // process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
      //   process.stdout.write(`console.log(result)`)
-      }
-      
+      }    
       //await disconnect()
     }
   };
@@ -136,6 +137,9 @@ const app = async (loggingEvent) => {
   }
   return app
 }
+
+
+
 /**
  * This method for testing purpose***
  * @param {*} ms 
