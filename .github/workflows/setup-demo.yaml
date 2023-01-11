@@ -31,7 +31,7 @@ jobs:
 
       - name: Compile Test
         run: |
-         echo "$GITHUB_CONTEXT"
+         npm install
          cd src/test/js
          node test-index.js
          mvn clean package
