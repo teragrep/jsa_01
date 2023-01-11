@@ -34,6 +34,5 @@ jobs:
          npm install
          cd src/test/js
          node test-index.js
-         mvn clean package
 
 
