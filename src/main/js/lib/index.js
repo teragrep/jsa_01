@@ -13,7 +13,7 @@
  const os = require('os')
  const debug = require('debug')//('log4js:jsa_01');
  const async = require('async')
-const { Console } = require('console')
+ const { Console } = require('console')
  
  let relpConnection;
 
@@ -58,8 +58,8 @@ const { Console } = require('console')
 }
 
 
-function setupConnection(serverPort, serverAddress){
-  return new Promise(async (resolve, reject) => {
+async function setupConnection(serverPort, serverAddress){
+  return await new Promise(async (resolve, reject) => {
     relpConnection = new RelpConnection();
     let conn = await relpConnection.connect(serverPort, serverAddress);	
     console.log('Connectig...',serverAddress,' at PORT ', serverPort, conn)
@@ -72,7 +72,6 @@ async function start(){
     let port = serverPort//1601;
     return await setupConnection(port, host);
   }
- // init()
 
   // Generate & wrap the messages in the syslog envelop 
 async function generateSyslogMessage(loggingEvent){
@@ -98,11 +97,17 @@ async function generateSyslogMessage(loggingEvent){
     })
   }
 // Current automation print the syslog message before relp commit method.
+beforeEach(async function() {
+
+
+  
+})
 
 const app = async (loggingEvent) => {
-    
-  // Generate the syslog message
-   let rfc5424log = await generateSyslogMessage(loggingEvent)
+
+  beforeEach(async function (){ // This is one of the way Jasmine support of  managing async works promises, otherwise it assumes as synchronus & move on
+
+    let rfc5424log = await generateSyslogMessage(loggingEvent)
 
 
    // Lets create the RELP connection
@@ -114,21 +119,23 @@ const app = async (loggingEvent) => {
       console.log(arg)
     }
 
-    if(conn){
-
+  
+      if(conn){
      //process.platform === 'linux' ? console.info(`${rfc5424log}\n`) : '' // Testing for the workflow
-    //let x = console.count()
-    // process.stdout.write('Console...')
      let result= await commit(rfc5424log)
-      if(result){  
+     if(result){  
         await print(`${rfc5424log}`) // Workflow OS ubuntu does not print the console message, so try to solve it adjusting the Console obj🤠 
         console.log = () => { }; // Again disable the console
+      }
       
-       // process.stdout.write(`${rfc5424log}\n`); // printing on the console in case conolse disabled
-     //   process.stdout.write(`console.log(result)`)
-      }    
       //await disconnect()
     }
+
+  })
+    
+  // Generate the syslog message
+   
+  
   };
 
     app.shutdown =  async(cb) => { 
@@ -138,23 +145,10 @@ const app = async (loggingEvent) => {
   return app
 }
 
-
-
-/**
- * This method for testing purpose***
- * @param {*} ms 
- * @returns 
- */
-function sleep(ms) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
 async function commit(msg){
     return new Promise(async(resolve, reject) => {
       let relpBatch = new RelpBatch();
-      relpBatch.insert(msg);
+      await relpBatch.insert(msg);
       
       let resWindow = await relpConnection.commit(relpBatch);
       await disconnect(resWindow)

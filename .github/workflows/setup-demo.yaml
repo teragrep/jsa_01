@@ -32,7 +32,6 @@ jobs:
       - name: Compile Test
         run: |
          npm install
-         cd src/test/js
-         node test-index.js
+         mvn clean package
 
 
