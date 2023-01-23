@@ -35,7 +35,7 @@ Requirements Backlog
 
 == High-level Architecture
 
-image::
+image::https://github.com/teragrep/jsa_01/blob/base-feat/images/JSA_01.png[]
 
 == Implementation
 
