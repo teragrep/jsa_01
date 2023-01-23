@@ -41,7 +41,7 @@ image::https://github.com/teragrep/jsa_01/blob/base-feat/images/JSA_01.png[]
 
 TBA
 
-* `installation of *rlp_02 and rlo_08*`
+* 
 +
 [source,node]
 -----------------
@@ -49,7 +49,7 @@ npm install
 -----------------
 
 * Module usage:
-+
++ The appender will use the rlo_08 and rlp_02 to send the log event message to the RELP Server.
 [source,javascript]
 -----------------
 const { SyslogMessage, Facility, SDElement, SDParam, Severity } = require('@teragrep/rlo_08')
@@ -71,11 +71,24 @@ mvn clean package
 
 == Configuration
 
-TBA
+* `*_type_*` - `*_jsAppender_*`
+* `*_hostname_*` `*_string_*` (defaults to os.hostname()) - origin of the log messages
 
-== Example
+== Example (default config)
 
-TBA
++
+[source,javascript]
+-----------------
 
+log4js.configure( {
+    appenders: {jsa: { type: jsAppender, appName: 'teragrep' },
+    console: { type: 'console' },
+  },
+  categories: {
+    jsa: { appenders: ['jsa'], level: 'error' },
+    default: { appenders: ['jsa'], level: 'trace' },
+  },
+})
+-----------------
 
-
+This configuration will send the log event messages to the RELP Server.
