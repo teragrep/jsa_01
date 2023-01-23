@@ -27,5 +27,5 @@ const logger = log4js.getLogger('jsa');
   //logger.error('FIX %s is over enginnered 😎!', 'Cheers!');
   //logger.error('Entering trace: First, solve the problem. Then, write the code');
   //logger.fatal('Don’t test it as a NASA application');  // ⛔ The Unicode character ' (U+2019 RIGHT SINGLE QUOTATION MARK) . So when pushing the log message with U+2019 fails but WHY???
-  logger.fatal("Don't  test it as a NASA application"); 
+  logger.fatal("Don't  test it as a NASA application😎"); 
  

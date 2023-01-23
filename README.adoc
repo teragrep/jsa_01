@@ -27,7 +27,7 @@ Requirements Backlog
 |12   |Expose error SyslogMessage     |Erros(expecptions) must not be hidden |Must Have |Open
 |13   |Extra libraries    |Do not use extra libraries  |Must Have |Open
 |14   |Variable checking|Check variables provided via configuration to be valid and raise errors if not in initilization |Must Have |Open
-|15   |Debug flags|Allow passing debulg falgs via configuration |OPTIONAL |Open
+|15   |Debug flags|Allow passing debulg flags via configuration |OPTIONAL |Open
 
 |=======================
 
@@ -35,7 +35,7 @@ Requirements Backlog
 
 == High-level Architecture
 
-TBA
+image::
 
 == Implementation
 

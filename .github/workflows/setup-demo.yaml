@@ -31,7 +31,6 @@ jobs:
 
       - name: Compile Test
         run: |
-         npm install
          mvn clean package
 
 

@@ -97,21 +97,17 @@ async function generateSyslogMessage(loggingEvent){
     })
   }
 // Current automation print the syslog message before relp commit method.
-beforeEach(async function() {
-
-
-  
-})
 
 const app = async (loggingEvent) => {
 
-  beforeEach(async function (){ // This is one of the way Jasmine support of  managing async works promises, otherwise it assumes as synchronus & move on
+  beforeEach(async function (){ // This is one of the way Jasmine support for  managing async works promises, otherwise it assumes as synchronus & move on
 
+    // Generate the syslog message
     let rfc5424log = await generateSyslogMessage(loggingEvent)
 
 
-   // Lets create the RELP connection
-     let conn = await start();
+    // Lets create the RELP connection
+    let conn = await start();
    
   
     function print(arg){
@@ -128,13 +124,10 @@ const app = async (loggingEvent) => {
         console.log = () => { }; // Again disable the console
       }
       
-      //await disconnect()
+      await disconnect()
     }
 
   })
-    
-  // Generate the syslog message
-   
   
   };
 
