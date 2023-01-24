@@ -4,29 +4,30 @@ Create appender for log4js-node to enable RELP usage from node.js applications.
 
 
 User Story: 
+As a developer I would like to use jsa_01 to push log messages over relp to a compatible relp-server with syslog envelope
 
 == Specs
 
-^^^^^^
+^^^^^
 Requirements Backlog
 [options="header,footer"]
 |=======================
-|#"|Title      |User Story |Importance |Status
+|#  |Title      |User Story |Importance |Status
 |1    |Rebind    |Rebind of the rlp_02 connection must be done after configureable amount of messages | OPTIONAL |Open
-|2    |Syslog     |Wrap messages in syslog envelope |Must Have |Open
-|3    |RELP    |Use rlp_02 library  |Must Have |Open
+|2    |Syslog     |Wrap messages in syslog envelope |Must Have |WIP
+|3    |RELP    |Use rlp_02 library  |Must Have |Done
 |4    |Lossless|Retry indefinitely and do not lose messages |Must Have |Open
 |5    |Robust|Processing must not hang indefinitely due to techinical issues but rather retry new connection |Must Have |Open
-|6    |Source Data    |Must include origin data in syslog structure-data within source-metadata | Must Have |Open
-|7    |Originator     |Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it |Must Have |Open
-|8    |app-namme    |syslog app-name must be configureable  |Must Have |Open
-|9    |hostname|syslog hostname must be configureable |Must Have |Open
-|10   |server port|Server ports need to be configureable |Must Have |Open
-|11   |Server address    |server address needs to be configureable | Must Have |Open
+|6    |Source Data    |Must include origin data in syslog structure-data within source-metadata | Must Have |WIP
+|7    |Originator     |Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it |Must Have |Done
+|8    |app-name    |Syslog app-name must be configureable  |Must Have |Done
+|9    |hostname|syslog hostname must be configureable |Must Have |Done
+|10   |server port|Server ports need to be configureable |Must Have |Done
+|11   |Server address    |server address needs to be configureable | Must Have |Done
 |12   |Expose error SyslogMessage     |Erros(expecptions) must not be hidden |Must Have |Open
 |13   |Extra libraries    |Do not use extra libraries  |Must Have |Open
-|14   |Variable checking|Check variables provided via configuration to be valid and raise errors if not in initilization |Must Have |Open
-|15   |Debug flags|Allow passing debulg falgs via configuration |OPTIONAL |Open
+|14   |Variable checking|Check variables provided via configuration to be valid and raise errors if not in initilization |Must Have |Done
+|15   |Debug flags|Allow passing debulg flags via configuration |OPTIONAL |Open
 
 |=======================
 
@@ -34,13 +35,17 @@ Requirements Backlog
 
 == High-level Architecture
 
-TBA
+image::https://github.com/teragrep/jsa_01/blob/base-feat/images/JSA_01.png[]
 
 == Implementation
 
-TBA
+The jsAppender to push log messages over relp to a compatible relp-server with syslog envelope.
+For the 
+RELP connection - rlp_02 +
+Generate the Syslog message - rlo_08 +
+RELP compatible server - Java-relp-server-demo (tested on) 
 
-* `installation of *rlp_02 and rlo_08*`
+* asynchronus behaviour completely controlled by the Jasmine async works.
 +
 [source,node]
 -----------------
@@ -48,18 +53,14 @@ npm install
 -----------------
 
 * Module usage:
-+
++ The appender uses the rlo_08 for handling formatting log messages and rlp_02 to send the log event message to the RELP Server.
 [source,javascript]
 -----------------
 const { SyslogMessage, Facility, SDElement, SDParam, Severity } = require('@teragrep/rlo_08')
 const { RelpConnection, RelpBatch } = require('@teragrep/rlp_02')
 -----------------
 
-* RelpConnection usage:
-+
-
-
-** Build
+* Build
 +
 [source,java]
 -----------------
@@ -68,4 +69,30 @@ mvn clean package
 
 * OPTIONAL *TIPS*
 
+async waterfall method also possible for run in the node engine (need to adjust the code).
 
+== Configuration
+
+* `*_type_*` - `*_jsAppender_*`
+* `*_hostname_*` - `*_string_*` (defaults to os.hostname()) - origin of the log messages
+* `*_appname_*` - `*_string_*` 
+* `*_serverAddress_*` - `*_string_*`
+* `*_serverPort_*` - `*_integer_*` (defaults to 1601) - Port of the relp server is listening in
+
+
+== Example (default config)
+[source,javascript]
+-----------------
+
+log4js.configure( {
+    appenders: {jsa: { type: jsAppender, appName: 'teragrep' },
+    console: { type: 'console' },
+  },
+  categories: {
+    jsa: { appenders: ['jsa'], level: 'error' },
+    default: { appenders: ['jsa'], level: 'trace' },
+  },
+})
+-----------------
+
+This configuration will send the log event messages to the RELP Server.
