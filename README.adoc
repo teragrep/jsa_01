@@ -39,9 +39,13 @@ image::https://github.com/teragrep/jsa_01/blob/base-feat/images/JSA_01.png[]
 
 == Implementation
 
-TBA
+The jsAppender to push log messages over relp to a compatible relp-server with syslog envelope.
+For the 
+RELP connection - rlp_02
+Generate the Syslog message - rlo_08
+RELP compatible server - Java-relp-server-demo (tested on) 
 
-* 
+* asynchronus behaviour completely controlled by the Jasmine async works.
 +
 [source,node]
 -----------------
@@ -49,18 +53,14 @@ npm install
 -----------------
 
 * Module usage:
-+ The appender will use the rlo_08 and rlp_02 to send the log event message to the RELP Server.
++ The appender uses the rlo_08 for handling formatting log messages and rlp_02 to send the log event message to the RELP Server.
 [source,javascript]
 -----------------
 const { SyslogMessage, Facility, SDElement, SDParam, Severity } = require('@teragrep/rlo_08')
 const { RelpConnection, RelpBatch } = require('@teragrep/rlp_02')
 -----------------
 
-* RelpConnection usage:
-+
-
-
-** Build
+* Build
 +
 [source,java]
 -----------------
@@ -69,14 +69,18 @@ mvn clean package
 
 * OPTIONAL *TIPS*
 
+async waterfall method also possible, when run in the node engine by adjusting the code.
+
 == Configuration
 
 * `*_type_*` - `*_jsAppender_*`
-* `*_hostname_*` `*_string_*` (defaults to os.hostname()) - origin of the log messages
+* `*_hostname_*` - `*_string_*` (defaults to os.hostname()) - origin of the log messages
+* `*_appname_*` - `*_string_*` 
+* `*_serverAddress_*` - `*_string_*` (defaults to os.hostname()) - origin of the log messages
+* `*_serverPort_*` - `*_integer_*` (defaults to 1601) - Port of the relp server is listening in
+
 
 == Example (default config)
-
-+
 [source,javascript]
 -----------------
 
