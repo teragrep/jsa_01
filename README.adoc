@@ -19,14 +19,14 @@ Requirements Backlog
 |4    |Lossless|Retry indefinitely and do not lose messages |Must Have |Open
 |5    |Robust|Processing must not hang indefinitely due to techinical issues but rather retry new connection |Must Have |Open
 |6    |Source Data    |Must include origin data in syslog structure-data within source-metadata | Must Have |WIP
-|7    |Originator     |Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it |Must Have |WIP
+|7    |Originator     |Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it |Must Have |Done
 |8    |app-name    |Syslog app-name must be configureable  |Must Have |Done
 |9    |hostname|syslog hostname must be configureable |Must Have |Done
 |10   |server port|Server ports need to be configureable |Must Have |Done
 |11   |Server address    |server address needs to be configureable | Must Have |Done
 |12   |Expose error SyslogMessage     |Erros(expecptions) must not be hidden |Must Have |Open
 |13   |Extra libraries    |Do not use extra libraries  |Must Have |Open
-|14   |Variable checking|Check variables provided via configuration to be valid and raise errors if not in initilization |Must Have |Open
+|14   |Variable checking|Check variables provided via configuration to be valid and raise errors if not in initilization |Must Have |Done
 |15   |Debug flags|Allow passing debulg flags via configuration |OPTIONAL |Open
 
 |=======================
@@ -41,8 +41,8 @@ image::https://github.com/teragrep/jsa_01/blob/base-feat/images/JSA_01.png[]
 
 The jsAppender to push log messages over relp to a compatible relp-server with syslog envelope.
 For the 
-RELP connection - rlp_02
-Generate the Syslog message - rlo_08
+RELP connection - rlp_02 +
+Generate the Syslog message - rlo_08 +
 RELP compatible server - Java-relp-server-demo (tested on) 
 
 * asynchronus behaviour completely controlled by the Jasmine async works.
@@ -69,14 +69,14 @@ mvn clean package
 
 * OPTIONAL *TIPS*
 
-async waterfall method also possible, when run in the node engine by adjusting the code.
+async waterfall method also possible for run in the node engine (need to adjust the code).
 
 == Configuration
 
 * `*_type_*` - `*_jsAppender_*`
 * `*_hostname_*` - `*_string_*` (defaults to os.hostname()) - origin of the log messages
 * `*_appname_*` - `*_string_*` 
-* `*_serverAddress_*` - `*_string_*` (defaults to os.hostname()) - origin of the log messages
+* `*_serverAddress_*` - `*_string_*`
 * `*_serverPort_*` - `*_integer_*` (defaults to 1601) - Port of the relp server is listening in
 
 
