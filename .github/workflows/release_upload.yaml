@@ -1,0 +1,44 @@
+name: Upload Release
+
+on:
+  
+  release:
+    types: [published]
+
+jobs:
+  # Confirm that build was upload successfully
+  upload:
+    uses: teragrep/jsa_01/.github/workflows/coverity_upload.yaml@automation
+    secrets: 
+      COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
+      COVERITY_EMAIL: ${{ secrets.COVERITY_EMAIL }}          
+          
+  publish:
+      #if: github.ref == 'refs/heads/base-feat'
+      needs: [upload]
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v1
+          with:
+            node-version: 14
+            #registry-url: https://registry.npmjs.org/
+        
+        - name: Set package registry
+          run: npm config set registry https://npm.pkg.github.com
+        - name: Github package registry authentication
+          run: npm set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
+        - name: Npm registry authentication
+          run: npm set //registry.npmjs.org/:_authToken ${{secrets.NPMJS_AUTOMATION}}
+        - name: Update the package,json
+          run: |
+           sed -i "s|\"version\": \"[^\"]*\"|\"version\": \"${{ github.event.release.tag_name }}\"|" package.json
+           git config user.email "38@teragrep.com"
+           git config user.name "spidermanja"
+           git add .
+           git commit -am "Updated the tag version ${{ github.event.release.tag_name }}"
+           git push origin HEAD:main        
+        - name: Publish packages
+          run: npm publish 
+
+          

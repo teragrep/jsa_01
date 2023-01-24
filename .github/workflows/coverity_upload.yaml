@@ -1,0 +1,74 @@
+name: coverity upload
+
+on: 
+  workflow_call:
+    secrets: 
+      COVERITY_TOKEN:
+        required: true
+      COVERITY_EMAIL: 
+        required: true
+jobs:
+  verify:
+    name: Verify Code
+    runs-on: ubuntu-latest
+    
+    env:
+      COVERITY: coverity_tool
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Maven
+        uses: actions/setup-java@v2
+        with:
+          java-version: 8.0.292+10
+          distribution: 'adopt'
+
+      - name: Cache Local Maven Repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: Java-Relp-Server-Demo 
+        run: |
+         git clone https://github.com/teragrep/java-relp-server-demo.git
+         cd java-relp-server-demo
+         mvn clean package
+         mkdir staging && cp target/*.jar staging
+         cd staging
+         java -jar java-relp-server-demo-jar-with-dependencies.jar & 
+
+
+      - name: Compile Test and Verify
+        run: mvn --batch-mode clean verify
+        
+      - name: Cache Coverity
+        id: cache_coverity
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.COVERITY }}
+          key: coverity
+        
+      - name: Download Coverity
+        if: steps.cache_coverity.outputs.cache-hit != 'true'
+        run: |
+          wget https://scan.coverity.com/download/linux64 --post-data "token=${{ secrets.COVERITY_TOKEN }}&project=teragrep%2Fjsa_01" -O ${{ env.COVERITY }}.tgz
+          mkdir -p ${{ env.COVERITY }}
+          tar zxvf ${{ env.COVERITY }}.tgz -C ${{ env.COVERITY }} --strip-components 1
+      - name: Compile Coverity
+        run: |
+           ${{ env.COVERITY }}/bin/cov-build --dir cov-int --fs-capture-search . --no-command --fs-capture-search-exclude-regex '[/\\]coverity_tool[/\\]'
+           tar czvf jsa_01.tgz cov-int        
+
+      - name: Upload to Coverity
+        run: |
+            curl --silent --form token=${{ secrets.COVERITY_TOKEN }} \
+            --form email=${{ secrets.COVERITY_EMAIL }}  \
+            --form file=@jsa_01.tgz \
+            --form version="${GITHUB_REF##*/}" \
+            --form description="automated upload" \
+            https://scan.coverity.com/builds??project=teragrep%2Fjsa_01
+
+  
+  

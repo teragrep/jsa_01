@@ -1,0 +1,12 @@
+name: CI
+
+on: push
+
+jobs:
+  # Confirm the coverity upload
+  coverity_upload:
+    uses: teragrep/jsa_01/.github/workflows/coverity_upload.yaml@automation
+    secrets: 
+      COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
+      COVERITY_EMAIL: ${{ secrets.COVERITY_EMAIL }}
+  
