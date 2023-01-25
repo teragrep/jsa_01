@@ -30,14 +30,14 @@ jobs:
           run: npm set //npm.pkg.github.com/:_authToken ${{ secrets.GITHUB_TOKEN }}
         - name: Npm registry authentication
           run: npm set //registry.npmjs.org/:_authToken ${{secrets.NPMJS_AUTOMATION}}
-        - name: Update the package,json
+        - name: Update the package json
           run: |
            sed -i "s|\"version\": \"[^\"]*\"|\"version\": \"${{ github.event.release.tag_name }}\"|" package.json
            git config user.email "38@teragrep.com"
            git config user.name "spidermanja"
            git add .
            git commit -am "Updated the tag version ${{ github.event.release.tag_name }}"
-           git push origin HEAD:main        
+           git push origin HEAD:automation        
         - name: Publish packages
           run: npm publish 
 
