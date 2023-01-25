@@ -68,7 +68,7 @@ jobs:
             --form file=@jsa_01.tgz \
             --form version="${GITHUB_REF##*/}" \
             --form description="automated upload" \
-            https://scan.coverity.com/builds??project=teragrep%2Fjsa_01
+            https://scan.coverity.com/builds?project=teragrep%2Fjsa_01
 
   
   
