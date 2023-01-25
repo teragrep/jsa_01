@@ -8,7 +8,7 @@ on:
 jobs:
   # Confirm that build was upload successfully
   upload:
-    uses: teragrep/jsa_01/.github/workflows/coverity_upload.yaml@automation
+    uses: teragrep/jsa_01/.github/workflows/coverity_upload.yaml@main
     secrets: 
       COVERITY_TOKEN: ${{ secrets.COVERITY_TOKEN }}
       COVERITY_EMAIL: ${{ secrets.COVERITY_EMAIL }}          
