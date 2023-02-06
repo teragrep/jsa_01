@@ -57,13 +57,18 @@
    // jsa_type: type
 }
 
-
+/**
+ * TODO: Handling the server connection timeout 
+ * @param {Number} serverPort 
+ * @param {string} serverAddress 
+ * @returns 
+ */
 async function setupConnection(serverPort, serverAddress){
   return await new Promise(async (resolve, reject) => {
     relpConnection = new RelpConnection();
     let conn = await relpConnection.connect(serverPort, serverAddress);	
     console.log('Connectig...',serverAddress,' at PORT ', serverPort, conn)
-    resolve(true)
+    resolve(conn)
   })
 }
 
@@ -108,7 +113,7 @@ const app = async (loggingEvent) => {
 
     // Lets create the RELP connection
     let conn = await start();
-   
+     
   
     function print(arg){
       console = new Console({stdout: process.stdout, stderr: process.stderr});
@@ -179,4 +184,8 @@ function configure(config, layouts, levels) {
   return jsAppender(config, layout, levels);
 }
 
-exports.configure = configure;
+//exports.configure = configure;
+module.exports = {
+  configure,
+  jsAppender
+}
