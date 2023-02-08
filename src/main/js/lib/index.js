@@ -28,7 +28,7 @@
   * 
   */
 
- function jsAppender(config, layout, levels) {
+ const jsAppender = (config, layout, levels) => {
    /**
     * this is for upcoming setting  
     */
@@ -176,7 +176,7 @@ async function commit(msg){
     
   }
 
-function configure(config, layouts, levels) {
+const configure = (config, layouts, levels) => {
   let layout = layouts.basicLayout;
   if (config.layout) {
     layout = layouts.layout(config.layout.type, config.layout);
@@ -185,7 +185,10 @@ function configure(config, layouts, levels) {
 }
 
 //exports.configure = configure;
+/*
 module.exports = {
   configure,
   jsAppender
-}
+}*/
+exports = module.exports = jsAppender
+exports.configure = configure
