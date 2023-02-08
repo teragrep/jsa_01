@@ -37,7 +37,7 @@ jobs:
            git config user.name "spidermanja"
            git add .
            git commit -am "Updated the tag version ${{ github.event.release.tag_name }}"
-           git push origin HEAD:automation        
+           git push origin HEAD:main        
         - name: Publish packages
           run: npm publish 
 
