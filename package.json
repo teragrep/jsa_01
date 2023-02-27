@@ -1,6 +1,6 @@
 {
   "name": "@teragrep/jsa_01",
-  "version": "v1.0.1-rc5",
+  "version": "v1.0.1-rc7",
   "description": "Javascript appender library",
   "repository": {
     "type": "git",
