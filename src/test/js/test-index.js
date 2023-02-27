@@ -4,7 +4,7 @@ var jsAppender = require('../../main/js/lib/index.js')
 
 
 log4js.configure( {
-    appenders: {jsa: { type: jsAppender, appName: 'teragrep' },
+    appenders: {jsa: { type: jsAppender, appName: 'teragrep', hostname: 'relp.teragrep.fi' },
     console: { type: 'console' },
   },
   categories: {

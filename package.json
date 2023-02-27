@@ -1,6 +1,6 @@
 {
   "name": "@teragrep/jsa_01",
-  "version": "v1.0.1-rc2",
+  "version": "v1.0.1-rc5",
   "description": "Javascript appender library",
   "repository": {
     "type": "git",
@@ -40,7 +40,7 @@
     "karma-jasmine": "^4.0.2",
     "karma-requirejs": "^1.1.0",
     "log4js": "^6.6.1",
-    "node": "^16.19.0",
+    "node": "^16.19.1",
     "requirejs": "^2.3.6"
   }
 }
