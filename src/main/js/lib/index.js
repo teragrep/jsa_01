@@ -4,8 +4,10 @@
  * - Must include hostname within new syslog structured-data (SD) so utilization systems can utilize it
  * Appender jsa_01 to push log messages over relp to a compatible relp-server with syslog envelope
  * 
+ * 
  */
-
+// jsa_01 test for config hostname possible override  
+//feat: configure the entreprise ID support
  'use strict'
 
  const { SyslogMessage, Facility, SDElement, SDParam, Severity } = require('@teragrep/rlo_08')
@@ -14,6 +16,7 @@
  const debug = require('debug')//('log4js:jsa_01');
  const async = require('async')
  const { Console } = require('console')
+ const crypto = require('crypto') // handling the UUID generation
  
  let relpConnection;
 
@@ -46,6 +49,7 @@
   const hostname = config.hostname || os.hostname()
   const serverPort = config.serverPort || 1601
   const serverAddress = config.serverAddress || 'localhost'
+  const useSD = config.useSD || Boolean(false)
   debug('Appender create with config ', config);
 
   const con = {
@@ -54,6 +58,7 @@
     serverPort: serverPort,
     hostname: hostname,
     appName: appName,
+    useSD : useSD
    // jsa_type: type
 }
 
@@ -86,6 +91,19 @@ async function generateSyslogMessage(loggingEvent){
     let pid = loggingEvent.pid.toString() // Converting to string for adjusting to syslog
  // let level = loggingEvent.level.levelStr // Current implememation uses the hardcoded level
     let logData = (loggingEvent.data[0] != '' ? loggingEvent.data[0] : '-')
+  //Add SD if enabled
+  let event_id_48577, origin_48577;
+    if(useSD){
+      event_id_48577 = await new SDElement("event_id@48577")
+      event_id_48577.addSDParam("hostname",hostname)
+      event_id_48577.addSDParam("uuid",crypto.randomUUID().toString())    
+      event_id_48577.addSDParam("source", "source")
+      event_id_48577.addSDParam("unixtime",Math.floor(Date.now() / 1000).toString())  
+
+      origin_48577 = new SDElement("origin@48577")
+    }
+
+
     let message = new SyslogMessage.Builder()
        .withAppName(appName) //validation
        .withTimestamp(startTime) // 
@@ -94,7 +112,10 @@ async function generateSyslogMessage(loggingEvent){
        .withSeverity(Severity.WARNING) // Warining 
        .withProcId(pid) 
        .withMsg(logData) // 
-       .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
+
+       .withSDElement(event_id_48577) 
+       //.withSDElement(origin_48577) 
+       //.withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
        .withDebug(false) // Note this line set enable all the console log messages🤓
        .build()
        return resolve (await message.toRfc5424SyslogMessage());
