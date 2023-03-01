@@ -92,7 +92,7 @@ async function generateSyslogMessage(loggingEvent){
  // let level = loggingEvent.level.levelStr // Current implememation uses the hardcoded level
     let logData = (loggingEvent.data[0] != '' ? loggingEvent.data[0] : '-')
   //Add SD if enabled
-  let event_id_48577, origin_48577;
+    let event_id_48577, origin_48577;
     if(useSD){
       event_id_48577 = await new SDElement("event_id@48577")
       event_id_48577.addSDParam("hostname",hostname)
@@ -114,7 +114,7 @@ async function generateSyslogMessage(loggingEvent){
        .withMsg(logData) // 
 
        .withSDElement(event_id_48577) 
-       //.withSDElement(origin_48577) 
+       .withSDElement(origin_48577) 
        //.withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
        .withDebug(false) // Note this line set enable all the console log messages🤓
        .build()
