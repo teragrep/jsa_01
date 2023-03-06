@@ -118,7 +118,7 @@ async function generateSyslogMessage(loggingEvent){
        .withSDElement(event_id_48577) 
        .withSDElement(origin_48577) 
        .withSDElement(priority_48577) 
-       .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
+      // .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
        .withDebug(false) // Note this line set enable all the console log messages🤓
        .build()
        return resolve (await message.toRfc5424SyslogMessage());
