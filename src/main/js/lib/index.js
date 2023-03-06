@@ -5,8 +5,7 @@
  * Appender jsa_01 to push log messages over relp to a compatible relp-server with syslog envelope
  * 
  * 
- */
-// jsa_01 test for config hostname possible override  
+ */  
 //feat: configure the entreprise ID support
  'use strict'
 
@@ -92,8 +91,8 @@ async function generateSyslogMessage(loggingEvent){
  // let level = loggingEvent.level.levelStr // Current implememation uses the hardcoded level
     let logData = (loggingEvent.data[0] != '' ? loggingEvent.data[0] : '-')
   //Add SD if enabled
-    let event_id_48577, origin_48577;
-    if(useSD){
+    let event_id_48577, origin_48577, priority_48577;
+    if(useSD == true){
       event_id_48577 = await new SDElement("event_id@48577")
       event_id_48577.addSDParam("hostname",hostname)
       event_id_48577.addSDParam("uuid",crypto.randomUUID().toString())    
@@ -101,6 +100,9 @@ async function generateSyslogMessage(loggingEvent){
       event_id_48577.addSDParam("unixtime",Math.floor(Date.now() / 1000).toString())  
 
       origin_48577 = new SDElement("origin@48577")
+      origin_48577.addSDParam("hostname", os.hostname())
+      priority_48577 = new SDElement("priority@48577")
+      priority_48577.addSDParam("class", "high")
     }
 
 
@@ -115,14 +117,13 @@ async function generateSyslogMessage(loggingEvent){
 
        .withSDElement(event_id_48577) 
        .withSDElement(origin_48577) 
-       //.withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
+       .withSDElement(priority_48577) 
+       .withSDElement(new SDElement("exampleSDID@32473", new SDParam("iut", "3"), new SDParam("eventSource", "HyväApplication")))  
        .withDebug(false) // Note this line set enable all the console log messages🤓
        .build()
        return resolve (await message.toRfc5424SyslogMessage());
-       //return rfc5424message;
     })
   }
-// Current automation print the syslog message before relp commit method.
 
 const app = async (loggingEvent) => {
 
@@ -143,10 +144,9 @@ const app = async (loggingEvent) => {
 
   
       if(conn){
-     //process.platform === 'linux' ? console.info(`${rfc5424log}\n`) : '' // Testing for the workflow
      let result= await commit(rfc5424log)
      if(result){  
-        await print(`${rfc5424log}`) // Workflow OS ubuntu does not print the console message, so try to solve it adjusting the Console obj🤠 
+        await print(`${rfc5424log}`)
         console.log = () => { }; // Again disable the console
       }
       
