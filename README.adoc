@@ -2,14 +2,13 @@
 
 Create appender for log4js-node to enable RELP usage from node.js applications.
 
-
 User Story: 
 As a developer I would like to use jsa_01 to push log messages over relp to a compatible relp-server with syslog envelope
 
 == Specs
 
-^^^^^
 Requirements Backlog
+
 [options="header,footer"]
 |=======================
 |#  |Title      |User Story |Importance |Status
@@ -31,8 +30,6 @@ Requirements Backlog
 
 |=======================
 
-
-
 == High-level Architecture
 
 image::https://github.com/teragrep/jsa_01/blob/base-feat/images/JSA_01.png[]
@@ -40,10 +37,14 @@ image::https://github.com/teragrep/jsa_01/blob/base-feat/images/JSA_01.png[]
 == Implementation
 
 The jsAppender to push log messages over relp to a compatible relp-server with syslog envelope.
-For the 
-RELP connection - rlp_02 +
-Generate the Syslog message - rlo_08 +
-RELP compatible server - Java-relp-server-demo (tested on) 
+
+Use following components for: 
+
+* rlp_02: RELP connection 
+* rlo_08: Generate the Syslog message 
+* Java-relp-server-demo: RELP compatible server (tested on) 
+
+How to implement:
 
 * asynchronus behaviour completely controlled by the Jasmine async works.
 +
@@ -53,7 +54,9 @@ npm install
 -----------------
 
 * Module usage:
-+ The appender uses the rlo_08 for handling formatting log messages and rlp_02 to send the log event message to the RELP Server.
++ 
+The appender uses the rlo_08 for handling formatting log messages and rlp_02 to send the log event message to the RELP Server.
++
 [source,javascript]
 -----------------
 const { SyslogMessage, Facility, SDElement, SDParam, Severity } = require('@teragrep/rlo_08')
@@ -67,8 +70,8 @@ const { RelpConnection, RelpBatch } = require('@teragrep/rlp_02')
 mvn clean package
 -----------------
 
-* OPTIONAL *TIPS*
-
+* Optional tips:
++
 async waterfall method also possible for run in the node engine (need to adjust the code).
 
 == Configuration
@@ -96,3 +99,24 @@ log4js.configure( {
 -----------------
 
 This configuration will send the log event messages to the RELP Server.
+
+== Contributing
+ 
+// Change the repository name in the issues link to match with your project's name
+ 
+You can involve yourself with our project by https://github.com/teragrep/jsa_01/issues/new/choose[opening an issue] or submitting a pull request.
+ 
+Contribution requirements:
+ 
+. *All changes must be accompanied by a new or changed test.* If you think testing is not required in your pull request, include a sufficient explanation as why you think so.
+. Security checks must pass
+. Pull requests must align with the principles and http://www.extremeprogramming.org/values.html[values] of extreme programming.
+. Pull requests must follow the principles of Object Thinking and Elegant Objects (EO).
+ 
+Read more in our https://github.com/teragrep/teragrep/blob/main/contributing.adoc[Contributing Guideline].
+ 
+=== Contributor License Agreement
+ 
+Contributors must sign https://github.com/teragrep/teragrep/blob/main/cla.adoc[Teragrep Contributor License Agreement] before a pull request is accepted to organization's repositories.
+ 
+You need to submit the CLA only once. After submitting the CLA you can contribute to all Teragrep's repositories. 
